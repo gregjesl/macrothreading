@@ -4,10 +4,9 @@
 const int initial_value = 1;
 int test_value = initial_value;
 
-MACRO_THREAD_FUNCTION_RETURN function(MACRO_THREAD_FUNCTION_ARGUEMENT arg)
+void function(void* arg)
 {
     test_value += *(int*)arg;
-    return NULL;
 }
 
 int main(void)
@@ -20,7 +19,7 @@ int main(void)
 
     // Start the thread
     const int arg = 1;
-    macro_thread_start_thread(&handle, function, (MACRO_THREAD_FUNCTION_ARGUEMENT)&arg);
+    macro_thread_start_thread(&handle, function, (void*)&arg);
 
     // Join the thread
     macro_thread_join(&handle);

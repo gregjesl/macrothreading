@@ -16,19 +16,17 @@ typedef struct macro_thread_handle_t {
 } macro_thread_handle;
 
 typedef uint32_t stack_depth_t;
-#define MACRO_THREAD_FUNCTION_RETURN void
-#define MACRO_THREAD_FUNCTION_ARGUEMENT void*
 #elif defined MACROTHREADING_PTHREADS
 #include <pthread.h>
+typedef void (macrothread_fun_t)(void*);
 typedef struct macro_thread_handle_t {
     pthread_t handle;
     size_t stack_depth;
+    macrothread_fun_t *thread_fun;
+    void* arguement;
 } macro_thread_handle;
 
 typedef size_t stack_depth_t;
-typedef void* (macro_thread_function)(void*);
-#define MACRO_THREAD_FUNCTION_RETURN void*
-#define MACRO_THREAD_FUNCTION_ARGUEMENT void*
 #elif defined MACTROTHREADING_WINDOWS
 #include <windows.h>
 typedef struct macro_thread_handle_t {
@@ -36,27 +34,21 @@ typedef struct macro_thread_handle_t {
     SIZE_T stack_depth;
     DWORD thread_id;
 } macro_thread_handle;
-typedef void (macro_thread_function)(void*);
 typedef SIZE_T stack_depth_t;
-#define MACRO_THREAD_FUNCTION_RETURN DWORD WINAPI
-#define MACRO_THREAD_FUNCTION_ARGUEMENT LPVOID
 #else
 typedef struct macro_thread_handle_t {
     // No elements
 } macro_thread_handle;
 
 typedef size_t stack_depth_t;
-typedef void (macro_thread_function)(void*);
-#define MACRO_THREAD_FUNCTION_RETURN void
-#define MACRO_THREAD_FUNCTION_ARGUEMENT void*
 #endif
 
 void macro_thread_set_stack_depth(macro_thread_handle *handle, stack_depth_t stack_depth);
 
 void macro_thread_start_thread(
     macro_thread_handle *handle, 
-    MACRO_THREAD_FUNCTION_RETURN (function)(MACRO_THREAD_FUNCTION_ARGUEMENT), 
-    MACRO_THREAD_FUNCTION_ARGUEMENT arg
+    void (function)(void*), 
+    void* arg
 );
 
 void macro_thread_join(macro_thread_handle *handle);

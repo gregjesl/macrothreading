@@ -1,5 +1,14 @@
 #include "macrothreading_thread.h"
 
+#ifdef MACROTHREADING_PTHREADS
+void* macrothread_pthread_wrapper(void* arg)
+{
+    macro_thread_handle *parent = (macro_thread_handle*)arg;
+    parent->thread_fun(parent->arguement);
+    return NULL;
+}
+#endif
+
 void macro_thread_set_stack_depth(macro_thread_handle *handle, stack_depth_t stack_depth)
 {
     #if defined MACROTHREADING_ESP32 
@@ -11,8 +20,8 @@ void macro_thread_set_stack_depth(macro_thread_handle *handle, stack_depth_t sta
 
 void macro_thread_start_thread(
     macro_thread_handle *handle, 
-    MACRO_THREAD_FUNCTION_RETURN (function)(MACRO_THREAD_FUNCTION_ARGUEMENT), 
-    MACRO_THREAD_FUNCTION_ARGUEMENT arg)
+    void (function)(void*), 
+    void* arg)
 {
     #if defined MACROTHREADING_ESP32
     xTaskCreatePinnedToCore(
@@ -28,7 +37,9 @@ void macro_thread_start_thread(
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_attr_setstacksize(&attr, handle->stack_depth);
-    pthread_create(&handle->handle, &attr, function, arg);
+    handle->thread_fun = function;
+    handle->arguement = arg;
+    pthread_create(&handle->handle, &attr, macrothread_pthread_wrapper, (void*)handle);
     pthread_attr_destroy(&attr);
     #elif defined MACTROTHREADING_WINDOWS
     handle->handle = CreateThread(
