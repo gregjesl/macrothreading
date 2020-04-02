@@ -6,6 +6,7 @@ int test_value = initial_value;
 
 void function(void* arg)
 {
+    macro_thread_delay(10);
     test_value += *(int*)arg;
 }
 

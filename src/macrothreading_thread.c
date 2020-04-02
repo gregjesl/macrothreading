@@ -55,6 +55,19 @@ void macro_thread_start_thread(
     #endif
 }
 
+void macro_thread_delay(unsigned long int milliseconds)
+{
+    #if defined MACROTHREADING_ESP32
+    vTaskDelay(milliseconds / portTickRateMS);
+    #elif defined MACROTHREADING_PTHREADS
+    usleep(milliseconds * 1000);
+    #elif defined MACTROTHREADING_WINDOWS
+    Sleep(milliseconds);
+    #else
+    #warning macro_thread_delay not defined
+    #endif
+}
+
 void macro_thread_join(macro_thread_handle *handle)
 {
     #if defined MACROTHREADING_ESP32

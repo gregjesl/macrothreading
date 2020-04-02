@@ -18,6 +18,7 @@ typedef struct macro_thread_handle_t {
 typedef uint32_t stack_depth_t;
 #elif defined MACROTHREADING_PTHREADS
 #include <pthread.h>
+#include <unistd.h>
 typedef void (macrothread_fun_t)(void*);
 typedef struct macro_thread_handle_t {
     pthread_t handle;
@@ -50,6 +51,8 @@ void macro_thread_start_thread(
     void (function)(void*), 
     void* arg
 );
+
+void macro_thread_delay(unsigned long int milliseconds);
 
 void macro_thread_join(macro_thread_handle *handle);
 
