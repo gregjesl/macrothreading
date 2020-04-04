@@ -53,3 +53,7 @@ dkms.conf
 
 # Build directory
 build/
+
+# Visual Studio
+.vs/
+CMakeSettings.json
