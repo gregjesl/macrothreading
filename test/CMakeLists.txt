@@ -26,3 +26,15 @@ if(CMAKE_USE_PTHREADS_INIT)
             PUBLIC MACROTHREADING_PTHREADS)
     endforeach()
 endif()
+
+# Win32
+if(WIN32)
+    foreach(test ${tests})
+        string(REGEX REPLACE ".*/" "" test_name "${test}")
+        string(REGEX REPLACE ".c$" "" test_name "${test_name}")
+        add_executable ("${PROJECT_NAME}_windows_${test_name}_test" ${test} ${sources})
+        add_test(NAME "${PROJECT_NAME}_windows_${test_name}" COMMAND "${PROJECT_NAME}_windows_${test_name}_test")
+        target_compile_definitions("${PROJECT_NAME}_windows_${test_name}_test"
+            PUBLIC MACROTHREADING_WINDOWS)
+    endforeach()
+endif()

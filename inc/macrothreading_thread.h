@@ -28,12 +28,15 @@ typedef struct macro_thread_handle_t {
 } macro_thread_handle;
 
 typedef size_t stack_depth_t;
-#elif defined MACTROTHREADING_WINDOWS
+#elif defined MACROTHREADING_WINDOWS
 #include <windows.h>
+typedef void (macrothread_fun_t)(void*);
 typedef struct macro_thread_handle_t {
     HANDLE handle;
     SIZE_T stack_depth;
     DWORD thread_id;
+    macrothread_fun_t* thread_fun;
+    void* arguement;
 } macro_thread_handle;
 typedef SIZE_T stack_depth_t;
 #else

@@ -1,8 +1,9 @@
 #include "macrothreading_thread.h"
 #include "test.h"
 
-const int initial_value = 1;
-int test_value = initial_value;
+#define INITIAL_VALUE 1
+
+int test_value = INITIAL_VALUE;
 
 void function(void* arg)
 {
@@ -26,5 +27,5 @@ int main(void)
     macro_thread_join(&handle);
 
     // Verify the result
-    TEST_EQUAL(test_value, initial_value + arg);
+    TEST_EQUAL(test_value, INITIAL_VALUE + arg);
 }
