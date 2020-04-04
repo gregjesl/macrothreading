@@ -18,6 +18,36 @@ DWORD WINAPI macrothread_windows_wrapper(LPVOID arg)
 }
 #endif
 
+macrothread_handle macrothread_handle_init()
+{
+    #if defined MACROTHREADING_ESP32
+    macrothread_handle result = {
+        .handle = NULL,
+        .name = NULL,
+        .stack_depth = 1024,
+        .priority = 5,
+        .core_id = tskNO_AFFINITY
+    };
+    #elif defined MACROTHREADING_PTHREADS
+    macrothread_handle result = {
+        .handle = NULL,
+        .stack_depth = 8388608,
+        .thread_fun = NULL,
+        .arguement = NULL
+    };
+    #elif defined MACROTHREADING_WINDOWS
+    macrothread_handle result = {
+        .handle = NULL,
+        .stack_depth = 8388608,
+        .thread_fun = NULL,
+        .arguement = NULL
+    };
+    #else
+    macrothread_handle result;
+    #endif
+
+    return result;
+}
 
 void macrothread_set_stack_depth(macrothread_handle *handle, stack_depth_t stack_depth)
 {

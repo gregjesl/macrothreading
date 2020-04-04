@@ -14,7 +14,7 @@ void function(void* arg)
 int main(void)
 {
     // Create the thread handle
-    macrothread_handle handle;
+    macrothread_handle handle = macrothread_handle_init();
 
     // Set the stack depth
     macrothread_set_stack_depth(&handle, 2048);

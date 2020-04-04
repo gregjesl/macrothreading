@@ -47,6 +47,8 @@ typedef struct macrothread_handle_t {
 typedef size_t stack_depth_t;
 #endif
 
+macrothread_handle macrothread_handle_init();
+
 void macrothread_set_stack_depth(macrothread_handle *handle, stack_depth_t stack_depth);
 
 void macrothread_start_thread(
