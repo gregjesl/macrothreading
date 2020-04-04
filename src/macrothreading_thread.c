@@ -3,7 +3,7 @@
 #ifdef MACROTHREADING_PTHREADS
 void* macrothread_pthread_wrapper(void* arg)
 {
-    macro_thread_handle *parent = (macro_thread_handle*)arg;
+    macrothread_handle *parent = (macrothread_handle*)arg;
     parent->thread_fun(parent->arguement);
     return NULL;
 }
@@ -12,14 +12,14 @@ void* macrothread_pthread_wrapper(void* arg)
 #if defined MACROTHREADING_WINDOWS
 DWORD WINAPI macrothread_windows_wrapper(LPVOID arg)
 {
-    macro_thread_handle* parent = (macro_thread_handle*)arg;
+    macrothread_handle* parent = (macrothread_handle*)arg;
     parent->thread_fun(parent->arguement);
     return 0;
 }
 #endif
 
 
-void macro_thread_set_stack_depth(macro_thread_handle *handle, stack_depth_t stack_depth)
+void macrothread_set_stack_depth(macrothread_handle *handle, stack_depth_t stack_depth)
 {
     #if defined MACROTHREADING_ESP32 \
         || defined MACROTHREADING_PTHREADS \
@@ -28,8 +28,8 @@ void macro_thread_set_stack_depth(macro_thread_handle *handle, stack_depth_t sta
     #endif
 }
 
-void macro_thread_start_thread(
-    macro_thread_handle *handle, 
+void macrothread_start_thread(
+    macrothread_handle *handle, 
     void (function)(void*), 
     void* arg)
 {
@@ -70,7 +70,7 @@ void macro_thread_start_thread(
     #endif
 }
 
-void macro_thread_delay(unsigned long int milliseconds)
+void macrothread_delay(unsigned long int milliseconds)
 {
     #if defined MACROTHREADING_ESP32
     vTaskDelay(milliseconds / portTickRateMS);
@@ -79,11 +79,11 @@ void macro_thread_delay(unsigned long int milliseconds)
     #elif defined MACROTHREADING_WINDOWS
     Sleep(milliseconds);
     #else
-    #warning macro_thread_delay not defined
+    #warning macrothread_delay not defined
     #endif
 }
 
-void macro_thread_join(macro_thread_handle *input)
+void macrothread_join(macrothread_handle *input)
 {
     #if defined MACROTHREADING_ESP32
     #warning Not implemented
