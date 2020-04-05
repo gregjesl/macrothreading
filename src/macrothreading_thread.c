@@ -32,7 +32,6 @@ macrothread_handle_t macrothread_handle_init()
     };
     #elif defined MACROTHREADING_PTHREADS
     macrothread_handle_struct_t result = {
-        .handle = NULL,
         .stack_depth = 8388608,
         .thread_fun = NULL,
         .arguement = NULL
