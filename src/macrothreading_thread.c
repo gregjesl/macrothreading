@@ -3,7 +3,7 @@
 #ifdef MACROTHREADING_PTHREADS
 void* macrothread_pthread_wrapper(void* arg)
 {
-    macrothread_handle *parent = (macrothread_handle*)arg;
+    macrothread_handle_t parent = (macrothread_handle_t)arg;
     parent->thread_fun(parent->arguement);
     return NULL;
 }
@@ -12,16 +12,18 @@ void* macrothread_pthread_wrapper(void* arg)
 #if defined MACROTHREADING_WINDOWS
 DWORD WINAPI macrothread_windows_wrapper(LPVOID arg)
 {
-    macrothread_handle* parent = (macrothread_handle*)arg;
+    macrothread_handle_t parent = (macrothread_handle_t)arg;
     parent->thread_fun(parent->arguement);
     return 0;
 }
 #endif
 
-macrothread_handle macrothread_handle_init()
+macrothread_handle_t macrothread_handle_init()
 {
+    macrothread_handle_t handle;
+
     #if defined MACROTHREADING_ESP32
-    macrothread_handle result = {
+    macrothread_handle_struct_t result = {
         .handle = NULL,
         .name = NULL,
         .stack_depth = 1024,
@@ -29,27 +31,30 @@ macrothread_handle macrothread_handle_init()
         .core_id = tskNO_AFFINITY
     };
     #elif defined MACROTHREADING_PTHREADS
-    macrothread_handle result = {
+    macrothread_handle_struct_t result = {
         .handle = NULL,
         .stack_depth = 8388608,
         .thread_fun = NULL,
         .arguement = NULL
     };
     #elif defined MACROTHREADING_WINDOWS
-    macrothread_handle result = {
+    macrothread_handle_struct_t result = {
         .handle = NULL,
         .stack_depth = 8388608,
         .thread_fun = NULL,
         .arguement = NULL
     };
     #else
-    macrothread_handle result;
+    macrothread_handle_struct_t result;
     #endif
 
-    return result;
+    handle = (macrothread_handle_t)malloc(sizeof(macrothread_handle_struct_t));
+    memcpy(handle, &result, sizeof(macrothread_handle_struct_t));
+
+    return handle;
 }
 
-void macrothread_set_stack_depth(macrothread_handle *handle, stack_depth_t stack_depth)
+void macrothread_set_stack_depth(macrothread_handle_t handle, stack_depth_t stack_depth)
 {
     #if defined MACROTHREADING_ESP32 \
         || defined MACROTHREADING_PTHREADS \
@@ -58,8 +63,29 @@ void macrothread_set_stack_depth(macrothread_handle *handle, stack_depth_t stack
     #endif
 }
 
+void macrothread_set_name(macrothread_handle_t handle, const char *name)
+{
+    #if defined MACROTHREADING_ESP32
+    handle->name = name;
+    #endif
+}
+
+void macrothread_set_priority(macrothread_handle_t handle, unsigned int priority)
+{
+    #if defined MACROTHREADING_ESP32
+    handle->priority = priority;
+    #endif
+}
+
+void macrothread_set_core(macrothread_handle_t handle, int core)
+{
+    #if defined MACROTHREADING_ESP32
+    handle->core = core;
+    #endif
+}
+
 void macrothread_start_thread(
-    macrothread_handle *handle, 
+    macrothread_handle_t handle, 
     void (function)(void*), 
     void* arg)
 {
@@ -113,7 +139,7 @@ void macrothread_delay(unsigned long int milliseconds)
     #endif
 }
 
-void macrothread_join(macrothread_handle *input)
+void macrothread_join(macrothread_handle_t input)
 {
     #if defined MACROTHREADING_ESP32
     #warning Not implemented

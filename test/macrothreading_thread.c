@@ -14,17 +14,17 @@ void function(void* arg)
 int main(void)
 {
     // Create the thread handle
-    macrothread_handle handle = macrothread_handle_init();
+    macrothread_handle_t handle = macrothread_handle_init();
 
     // Set the stack depth
-    macrothread_set_stack_depth(&handle, 2048);
+    macrothread_set_stack_depth(handle, 2048);
 
     // Start the thread
     const int arg = 1;
-    macrothread_start_thread(&handle, function, (void*)&arg);
+    macrothread_start_thread(handle, function, (void*)&arg);
 
     // Join the thread
-    macrothread_join(&handle);
+    macrothread_join(handle);
 
     // Verify the result
     TEST_EQUAL(test_value, INITIAL_VALUE + arg);
