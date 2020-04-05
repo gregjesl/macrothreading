@@ -39,8 +39,10 @@ for:
     - sudo apt-get update
     - sudo apt-get -y install git wget flex bison gperf python python-pip python-setuptools cmake ninja-build ccache libffi-dev libssl-dev
     - mkdir ~/esp
-    - git clone --recursive https://github.com/espressif/esp-idf.git ~/esp/esp-idf
-    - ~/esp/esp-idf/install.h
+    - cd ~/esp
+    - git clone --recursive https://github.com/espressif/esp-idf.git
+    - cd cd ~/esp/esp-idf
+    - ./install.sh
     - . $HOME/esp/esp-idf/export.sh
 
 before_build:
