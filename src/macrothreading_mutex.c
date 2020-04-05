@@ -86,7 +86,7 @@ void macrothread_mutex_destroy(macrothread_mutex_t mutex)
     if(!CloseHandle(*mutex)) {
         ExitProcess(1);
     }
-    free(mutex)
+    free(mutex);
     #else
     if(mutex) {
         exit(1);
