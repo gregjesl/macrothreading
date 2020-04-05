@@ -11,12 +11,12 @@ configuration:
 - Debug
 
 for:
-  -
-    matrix:
-      only:
-        - image: Ubuntu
-        - platform: x64
-        - configuration: Release
+-
+  matrix:
+    except:
+      - image: Windows
+        platform: x86
+        configuration: Debug
   
     install:
     - sudo apt-get update
