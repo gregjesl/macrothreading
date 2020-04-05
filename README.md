@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/9bi8fyqit1m958h8?svg=true)](https://ci.appveyor.com/project/gregjesl/macrothreading)
 # Macrothreading
-Cross-platform multithreading support written in C for Linux, Mac, Windows and the [ESP32](https://www.espressif.com/en/products/hardware/esp32/overview). 
+Cross-platform multithreading support written in C for Linux, Mac, Windows, and the [ESP32](https://www.espressif.com/en/products/hardware/esp32/overview). 
 
 ## Motiviation
 The ability to target multiple platforms makes any application or library more flexible, thus making it more useful. The specific motiviation for this project was the ability to run (and debug) applications meant for the ESP32 on a normal computer for debugging. 
@@ -82,7 +82,7 @@ int main(void)
 }
 ```
 
-## Condition
+### Condition
 Conditions are used to block a thread until another thread provides a signal:
 ```c
 #include "macrothreading_thread.h"
