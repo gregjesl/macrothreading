@@ -3,18 +3,20 @@ image:
 - Visual Studio 2015
 
 platform:
-  - x86
-  - x64
+- x64
+- x86
   
 configuration:
-- Debug
 - Release
+- Debug
 
 for:
   -
     matrix:
       only:
         - image: Ubuntu
+        - platform: x64
+        - configuration: Release
   
     install:
     - sudo apt-get update
