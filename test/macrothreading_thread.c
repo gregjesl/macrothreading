@@ -20,6 +20,9 @@ int main(void)
     // Create the thread handle
     macrothread_handle_t handle = macrothread_handle_init();
 
+    // Verify the handle
+    TEST_NOT_NULL(handle);
+
     // Set the stack depth
     macrothread_set_stack_depth(handle, 2048);
 
@@ -32,4 +35,7 @@ int main(void)
 
     // Verify the result
     TEST_EQUAL(test_value, INITIAL_VALUE + arg);
+
+    // Destory the handle
+    macrothread_handle_destroy(handle);
 }
