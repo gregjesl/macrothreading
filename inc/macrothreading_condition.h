@@ -1,6 +1,10 @@
 #ifndef MACROTHREADING_CONDITION_H
 #define MACROTHREADING_CONDITION_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 
 #if defined MACROTHREADING_ESP32
@@ -38,5 +42,9 @@ macrothread_condition_t macrothread_condition_init();
 void macrothread_condition_wait(macrothread_condition_t cond);
 void macrothread_condition_signal(macrothread_condition_t cond);
 void macrothread_condition_destroy(macrothread_condition_t cond);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

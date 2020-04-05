@@ -1,6 +1,10 @@
 #ifndef MACROTHREADING_THREAD_H
 #define MACROTHREADING_THREAD_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -66,5 +70,9 @@ void macrothread_start_thread(
 void macrothread_delay(unsigned long int milliseconds);
 
 void macrothread_join(macrothread_handle_t handle);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

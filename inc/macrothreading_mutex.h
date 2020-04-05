@@ -1,6 +1,10 @@
 #ifndef MACROTHREADING_MUTEX_H
 #define MACROTHREADING_MUTEX_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 
 #if defined MACROTHREADING_ESP32
@@ -24,5 +28,9 @@ macrothread_mutex_t macrothread_mutex_init();
 void macrothread_mutex_lock(macrothread_mutex_t mutex);
 void macrothread_mutex_unlock(macrothread_mutex_t mutex);
 void macrothread_mutex_destroy(macrothread_mutex_t mutex);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
