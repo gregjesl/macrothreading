@@ -10,6 +10,19 @@ configuration:
 - Debug
 - Release
 
+for:
+  -
+    matrix:
+      only:
+        - image: Ubuntu
+  
+    install:
+    - apt-get install git wget flex bison gperf python python-pip python-setuptools cmake ninja-build ccache libffi-dev libssl-dev
+    - mkdir esp
+    - git clone --recursive https://github.com/espressif/esp-idf.git ./esp
+    - ./esp/esp-idf/install.h
+    - . $HOME/esp/esp-idf/export.sh
+
 before_build:
   - cmake -H. -B_builds -DCMAKE_BUILD_TYPE=%CONFIGURATION%
 
