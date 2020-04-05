@@ -176,6 +176,7 @@ void macrothread_delay(unsigned long int milliseconds)
 
 void macrothread_join(macrothread_handle_t input)
 {
+    if(input->detached) return;
     #if defined MACROTHREADING_ESP32
     xEventGroupWaitBits(
         input->join_event,
