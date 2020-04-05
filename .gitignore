@@ -56,4 +56,5 @@ build/
 
 # Visual Studio
 .vs/
+.vscode/
 CMakeSettings.json
