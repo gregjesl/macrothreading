@@ -29,23 +29,6 @@ for:
     - . $HOME/esp/esp-idf/export.sh
     - cd ~/projects/macrothreading
 
-for:
-  -
-    matrix:
-      only:
-        - image: Ubuntu
-  
-    install:
-    - sudo apt-get update
-    - sudo apt-get -y install git wget flex bison gperf python python-pip python-setuptools cmake ninja-build ccache libffi-dev libssl-dev
-    - mkdir ~/esp
-    - cd ~/esp
-    - git clone --recursive https://github.com/espressif/esp-idf.git
-    - cd ~/esp/esp-idf
-    - ./install.sh
-    - . $HOME/esp/esp-idf/export.sh
-    - cd ~/projects/macrothreading
-
 before_build:
   - cmake -H. -B_builds -DCMAKE_BUILD_TYPE=%CONFIGURATION%
 
