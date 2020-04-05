@@ -1,5 +1,14 @@
 #include "macrothreading_thread.h"
 
+#ifdef MACROTHREADING_ESP32
+void macrothread_esp_wrapper(void* arg)
+{
+    macrothread_handle_t parent = (macrothread_handle_t)arg;
+    parent->thread_fun(parent->arguement);
+    xEventGroupSetBits(parent->join_event, MACROTHREADING_JOIN_MASK);
+}
+#endif
+
 #ifdef MACROTHREADING_PTHREADS
 void* macrothread_pthread_wrapper(void* arg)
 {
@@ -25,6 +34,8 @@ macrothread_handle_t macrothread_handle_init()
     #if defined MACROTHREADING_ESP32
     macrothread_handle_struct_t result = {
         .handle = NULL,
+        .thread_fun = NULL,
+        .arguement = NULL,
         .name = NULL,
         .stack_depth = 1024,
         .priority = 5,
@@ -79,7 +90,7 @@ void macrothread_set_priority(macrothread_handle_t handle, unsigned int priority
 void macrothread_set_core(macrothread_handle_t handle, int core)
 {
     #if defined MACROTHREADING_ESP32
-    handle->core = core;
+    handle->core_id = core;
     #endif
 }
 
@@ -89,14 +100,17 @@ void macrothread_start_thread(
     void* arg)
 {
     #if defined MACROTHREADING_ESP32
+    handle->thread_fun = function;
+    handle->arguement = arg;
+    handle->join_event = xEventGroupCreate();
     xTaskCreatePinnedToCore(
-        function,
+        macrothread_esp_wrapper,
         handle->name,
         handle->stack_depth,
-        arg,
+        handle,
         handle->priority,
         &handle->handle,
-        handle->core_id;
+        handle->core_id
         );
     #elif defined MACROTHREADING_PTHREADS
     pthread_attr_t attr;
@@ -128,7 +142,7 @@ void macrothread_start_thread(
 void macrothread_delay(unsigned long int milliseconds)
 {
     #if defined MACROTHREADING_ESP32
-    vTaskDelay(milliseconds / portTickRateMS);
+    vTaskDelay(milliseconds / portTICK_PERIOD_MS);
     #elif defined MACROTHREADING_PTHREADS
     usleep(milliseconds * 1000);
     #elif defined MACROTHREADING_WINDOWS
@@ -141,7 +155,14 @@ void macrothread_delay(unsigned long int milliseconds)
 void macrothread_join(macrothread_handle_t input)
 {
     #if defined MACROTHREADING_ESP32
-    #warning Not implemented
+    xEventGroupWaitBits(
+        input->join_event,
+        MACROTHREADING_JOIN_MASK,
+        pdTRUE,
+        pdTRUE,
+        portMAX_DELAY
+    );
+    vEventGroupDelete(input->join_event);
     #elif defined MACROTHREADING_PTHREADS
     pthread_join(input->handle, NULL);
     #elif defined MACROTHREADING_WINDOWS

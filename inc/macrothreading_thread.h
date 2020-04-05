@@ -1,6 +1,10 @@
 #ifndef MACROTHREADING_THREAD_H
 #define MACROTHREADING_THREAD_H
 
+#if defined ESP_PLATFORM
+#define MACROTHREADING_ESP32
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -12,12 +16,20 @@ extern "C" {
 #if defined MACROTHREADING_ESP32
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/event_groups.h"
+
+#define MACROTHREADING_JOIN_MASK 1 << 0
+
+typedef void (macrothread_fun_t)(void*);
 typedef struct macrothread_handle_struct {
     TaskHandle_t handle;
+    macrothread_fun_t *thread_fun;
+    void* arguement;
     const char *name;
     uint32_t stack_depth;
     UBaseType_t priority;
     BaseType_t core_id;
+    EventGroupHandle_t join_event;
 } macrothread_handle_struct_t;
 
 typedef uint32_t stack_depth_t;

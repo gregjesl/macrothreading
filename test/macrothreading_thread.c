@@ -11,7 +11,11 @@ void function(void* arg)
     test_value += *(int*)arg;
 }
 
+#if defined ESP_PLATFORM
+void app_main(void)
+#else
 int main(void)
+#endif
 {
     // Create the thread handle
     macrothread_handle_t handle = macrothread_handle_init();

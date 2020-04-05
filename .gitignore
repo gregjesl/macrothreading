@@ -58,3 +58,6 @@ build/
 .vs/
 .vscode/
 CMakeSettings.json
+
+# ESP32
+sdkconfig

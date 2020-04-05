@@ -48,7 +48,7 @@ void macrothread_condition_wait(macrothread_condition_t cond)
     #if defined MACROTHREADING_ESP32
     xEventGroupWaitBits(
         cond,
-        MACROTHREADING_EVENT_MASK
+        MACROTHREADING_EVENT_MASK,
         pdTRUE,
         pdTRUE,
         portMAX_DELAY
@@ -81,7 +81,7 @@ void macrothread_condition_wait(macrothread_condition_t cond)
 void macrothread_condition_signal(macrothread_condition_t cond)
 {
     #if defined MACROTHREADING_ESP32
-    xEventGroupSetBits(*cond, MACROTHREADING_EVENT_MASK);
+    xEventGroupSetBits(cond, MACROTHREADING_EVENT_MASK);
     #elif defined MACROTHREADING_PTHREADS
     if(pthread_mutex_lock(cond->mutex) != 0) {
         exit(1);

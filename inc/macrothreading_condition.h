@@ -1,6 +1,10 @@
 #ifndef MACROTHREADING_CONDITION_H
 #define MACROTHREADING_CONDITION_H
 
+#if defined ESP_PLATFORM
+#define MACROTHREADING_ESP32
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -10,7 +14,7 @@ extern "C" {
 #if defined MACROTHREADING_ESP32
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
-#define MACROTHREADING_EVENT_MASK (1 << 0)
+#define MACROTHREADING_EVENT_MASK 1 << 0
 typedef EventGroupHandle_t macrothread_condition_t;
 #elif defined MACROTHREADING_PTHREADS
 #include <pthread.h>

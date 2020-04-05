@@ -1,9 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 
-include_directories(
-    ./
-    ../inc
-)
+if(ESP_PLATFORM)
+    return()
+endif()
 
 file(GLOB tests
     "*.c"
@@ -11,6 +10,11 @@ file(GLOB tests
 
 file(GLOB sources
     "../src/*.c"
+)
+
+include_directories(
+    ./
+    ../inc
 )
 
 # Pthreads
