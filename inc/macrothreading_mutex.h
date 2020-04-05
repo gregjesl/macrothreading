@@ -9,18 +9,20 @@
 typedef SemaphoreHandle_t macrothread_mutex_t;
 #elif defined MACROTHREADING_PTHREADS
 #include <pthread.h>
-typedef pthread_mutex_t macrothread_mutex_t;
+#include <string.h>
+typedef pthread_mutex_t* macrothread_mutex_t;
 #elif defined MACROTHREADING_WINDOWS
 #include <windows.h>
-typedef HANDLE macrothread_mutex_t;
+#include <string.h>
+typedef HANDLE* macrothread_mutex_t;
 #else
 #include <stdbool.h>
 typedef bool macrothread_mutex_t;
 #endif
 
-void macrothread_mutex_init(macrothread_mutex_t *mutex);
-void macrothread_mutex_lock(macrothread_mutex_t *mutex);
-void macrothread_mutex_unlock(macrothread_mutex_t *mutex);
-void macrothread_mutex_destroy(macrothread_mutex_t *mutex);
+macrothread_mutex_t macrothread_mutex_init();
+void macrothread_mutex_lock(macrothread_mutex_t mutex);
+void macrothread_mutex_unlock(macrothread_mutex_t mutex);
+void macrothread_mutex_destroy(macrothread_mutex_t mutex);
 
 #endif

@@ -1,30 +1,33 @@
 #include "macrothreading_mutex.h"
 
-void macrothread_mutex_init(macrothread_mutex_t *mutex)
+macrothread_mutex_t macrothread_mutex_init()
 {
     #if defined MACROTHREADING_ESP32
-    *mutex = xSemaphoreCreateMutex();
+    return xSemaphoreCreateMutex();
     #elif defined MACROTHREADING_PTHREADS
-    if(pthread_mutex_init(mutex, NULL) != 0) {
-        exit(1);
+    pthread_mutex_t *mutex;
+    mutex = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+    if(mutex == NULL) {
+        return NULL;
     }
+    return pthread_mutex_init(mutex, NULL) == 0 ? mutex : NULL;
     #elif defined MACROTHREADING_WINDOWS
+    HANDLE *mutex;
+    mutex = (HANDLE*)malloc(sizeof(HANDLE));
     *mutex = CreateMutex( 
         NULL,   // default security attributes
         FALSE,  // initially not owned
         NULL);  // unnamed mutex
-    if(*mutex == NULL) {
-        ExitProcess(1);
-    }
+    return mutex;
     #else
-    *mutex = false;
+    return false;
     #endif
 }
 
-void macrothread_mutex_lock(macrothread_mutex_t *mutex)
+void macrothread_mutex_lock(macrothread_mutex_t mutex)
 {
     #if defined MACROTHREADING_ESP32
-    xSemaphoreTake(*mutex, portMAX_DELAY);
+    xSemaphoreTake(mutex, portMAX_DELAY);
     #elif defined MACROTHREADING_PTHREADS
     if(pthread_mutex_lock(mutex) != 0) {
         exit(1);
@@ -43,17 +46,17 @@ void macrothread_mutex_lock(macrothread_mutex_t *mutex)
         ExitProcess(1);
     }
     #else
-    if(*mutex) {
+    if(mutex) {
         exit(1);
     }
-    *mutex = true;
+    mutex = true;
     #endif
 }
 
-void macrothread_mutex_unlock(macrothread_mutex_t *mutex)
+void macrothread_mutex_unlock(macrothread_mutex_t mutex)
 {
     #if defined MACROTHREADING_ESP32
-    xSemaphoreGive(*mutex);
+    xSemaphoreGive(mutex);
     #elif defined MACROTHREADING_PTHREADS
     if(pthread_mutex_unlock(mutex) != 0) {
         exit(1);
@@ -63,27 +66,29 @@ void macrothread_mutex_unlock(macrothread_mutex_t *mutex)
         ExitProcess(1);
     }
     #else
-    if(!*mutex) {
+    if(!mutex) {
         exit(1);
     }
-    *mutex = false;
+    mutex = false;
     #endif
 }
 
-void macrothread_mutex_destroy(macrothread_mutex_t *mutex)
+void macrothread_mutex_destroy(macrothread_mutex_t mutex)
 {
     #if defined MACROTHREADING_ESP32
-    vSemaphoreDelete(*mutex);
+    vSemaphoreDelete(mutex);
     #elif defined MACROTHREADING_PTHREADS
     if(pthread_mutex_destroy(mutex) != 0) {
         exit(1);
     }
+    free(mutex);
     #elif defined MACROTHREADING_WINDOWS
     if(!CloseHandle(*mutex)) {
         ExitProcess(1);
     }
+    free(mutex)
     #else
-    if(*mutex) {
+    if(mutex) {
         exit(1);
     }
     #endif

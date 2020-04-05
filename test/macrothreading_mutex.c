@@ -10,13 +10,13 @@ macrothread_mutex_t mutex;
 void function(void* arg)
 {
     // Lock the mutex
-    macrothread_mutex_lock(&mutex);
+    macrothread_mutex_lock(mutex);
 
     // Increment the value
     test_value += *(int*)arg;
 
     // Unlock the mutex
-    macrothread_mutex_unlock(&mutex);
+    macrothread_mutex_unlock(mutex);
 }
 
 int main(void)
@@ -28,10 +28,10 @@ int main(void)
     macrothread_set_stack_depth(&handle, 2048);
 
     // Initialize the mutex
-    macrothread_mutex_init(&mutex);
+    mutex = macrothread_mutex_init();
 
     // Lock the mutex
-    macrothread_mutex_lock(&mutex);
+    macrothread_mutex_lock(mutex);
 
     // Start the thread
     const int arg = 1;
@@ -44,18 +44,18 @@ int main(void)
     TEST_EQUAL(test_value, INITIAL_VALUE);
 
     // Unlock the mutex
-    macrothread_mutex_unlock(&mutex);
+    macrothread_mutex_unlock(mutex);
 
     // Loop until updated
-    macrothread_mutex_lock(&mutex);
+    macrothread_mutex_lock(mutex);
     while(test_value == INITIAL_VALUE) {
-        macrothread_mutex_unlock(&mutex);
+        macrothread_mutex_unlock(mutex);
         macrothread_delay(1);
-        macrothread_mutex_lock(&mutex);
+        macrothread_mutex_lock(mutex);
     }
 
     // Unlock the mutex
-    macrothread_mutex_unlock(&mutex);
+    macrothread_mutex_unlock(mutex);
 
     // Join the thread
     macrothread_join(&handle);
@@ -64,5 +64,5 @@ int main(void)
     TEST_EQUAL(test_value, INITIAL_VALUE + arg);
 
     // Destroy the mutex
-    macrothread_mutex_destroy(&mutex);
+    macrothread_mutex_destroy(mutex);
 }
