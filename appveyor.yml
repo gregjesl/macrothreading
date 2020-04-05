@@ -29,6 +29,9 @@ for:
     - . $HOME/esp/esp-idf/export.sh
     - cd ~/projects/macrothreading
 
+    after_build:
+    - idf.py build
+
 before_build:
   - cmake -H. -B_builds -DCMAKE_BUILD_TYPE=%CONFIGURATION%
 
