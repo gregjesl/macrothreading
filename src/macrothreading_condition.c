@@ -30,7 +30,7 @@ macrothread_condition_t macrothread_condition_init()
     if(result->mutex == NULL) {
         ExitProcess(1);
     }
-    InitializeCriticalSection(result.mutex);
+    InitializeCriticalSection(result->mutex);
     result->cond = (CONDITION_VARIABLE*)malloc(sizeof(CONDITION_VARIABLE));
     if(result->cond == NULL) {
         ExitProcess(1);

@@ -13,7 +13,7 @@ void macrothread_mutex_init(macrothread_mutex_t *mutex)
         NULL,   // default security attributes
         FALSE,  // initially not owned
         NULL);  // unnamed mutex
-    if(*mutx == NULL) {
+    if(*mutex == NULL) {
         ExitProcess(1);
     }
     #else
@@ -59,7 +59,7 @@ void macrothread_mutex_unlock(macrothread_mutex_t *mutex)
         exit(1);
     }
     #elif defined MACROTHREADING_WINDOWS
-    if(! ReleaseMutex(*mutex))
+    if(! ReleaseMutex(*mutex)) {
         ExitProcess(1);
     }
     #else

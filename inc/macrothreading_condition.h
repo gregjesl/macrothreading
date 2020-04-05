@@ -21,13 +21,14 @@ typedef struct macrothread_condition_struct
 typedef macrothread_condition_struct_t* macrothread_condition_t;
 #elif defined MACROTHREADING_WINDOWS
 #include <windows.h>
+#include <stdbool.h>
 typedef struct macrothread_condition_struct
 {
     CRITICAL_SECTION *mutex;
     CONDITION_VARIABLE *cond;
     bool signaled;
 } macrothread_condition_struct_t;
-typedef *macrothread_condition_struct_t* macrothread_condition_t;
+typedef macrothread_condition_struct_t* macrothread_condition_t;
 #else
 #include <stdbool.h>
 typedef bool macrothread_condition_t;
