@@ -35,6 +35,10 @@ int main(void)
     condition = macrothread_condition_init();
     answer = macrothread_condition_init();
 
+    // Verify the conditions
+    TEST_NOT_NULL(condition);
+    TEST_NOT_NULL(answer);
+
     // Start the thread
     const int arg = 1;
     macrothread_start_thread(handle, function, (void*)&arg);
@@ -60,4 +64,7 @@ int main(void)
     // Destroy the condition
     macrothread_condition_destroy(condition);
     macrothread_condition_destroy(answer);
+
+    // Destroy the handle
+    macrothread_handle_destroy(handle);
 }

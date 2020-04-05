@@ -83,6 +83,8 @@ void macrothread_delay(unsigned long int milliseconds);
 
 void macrothread_join(macrothread_handle_t handle);
 
+void macrothread_handle_destroy(macrothread_handle_t handle);
+
 #ifdef __cplusplus
 }
 #endif

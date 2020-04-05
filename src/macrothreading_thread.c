@@ -174,3 +174,8 @@ void macrothread_join(macrothread_handle_t input)
     #warning Join not applicable when threading is not set
     #endif
 }
+
+void macrothread_handle_destroy(macrothread_handle_t handle)
+{
+    free(handle);
+}

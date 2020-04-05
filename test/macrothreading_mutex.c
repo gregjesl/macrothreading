@@ -30,6 +30,9 @@ int main(void)
     // Initialize the mutex
     mutex = macrothread_mutex_init();
 
+    // Verify the mutex
+    TEST_NOT_NULL(mutex);
+
     // Lock the mutex
     macrothread_mutex_lock(mutex);
 
@@ -65,4 +68,7 @@ int main(void)
 
     // Destroy the mutex
     macrothread_mutex_destroy(mutex);
+
+    // Destroy the handle
+    macrothread_handle_destroy(handle);
 }
