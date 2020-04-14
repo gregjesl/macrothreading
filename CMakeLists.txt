@@ -7,6 +7,9 @@ endif()
 
 project(macrothreading)
 
+# Declare the project name variable
+set(MACROTHREADING_LIBRARY_NAME ${CMAKE_PROJECT_NAME})
+
 # Get the source files
 file(GLOB sources "src/*.c")
 
