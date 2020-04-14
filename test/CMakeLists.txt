@@ -30,7 +30,7 @@ if(CMAKE_USE_PTHREADS_INIT)
         add_test(NAME "${full_name}" COMMAND "${full_name}_test")
         target_compile_definitions("${full_name}_test"
             PUBLIC MACROTHREADING_PTHREADS)
-        target_link_libraries ("${full_name}_test" ${CMAKE_PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+        target_link_libraries ("${full_name}_test" ${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
     endforeach()
 # Win32
 elseif(WIN32)
@@ -43,6 +43,6 @@ elseif(WIN32)
         add_test(NAME "${full_name}" COMMAND "${full_name}_test")
         target_compile_definitions("${full_name}_test"
             PUBLIC MACROTHREADING_WINDOWS)
-        target_link_libraries ("${full_name}_test" ${CMAKE_PROJECT_NAME})
+        target_link_libraries ("${full_name}_test" ${PROJECT_NAME})
     endforeach()
 endif()
