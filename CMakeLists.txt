@@ -8,7 +8,7 @@ endif()
 project(macrothreading)
 
 # Declare the project name variable
-set(MACROTHREADING_LIBRARY_NAME ${CMAKE_PROJECT_NAME})
+set(MACROTHREADING_LIBRARY_NAME ${PROJECT_NAME})
 
 # Get the source files
 file(GLOB sources "src/*.c")
@@ -27,22 +27,25 @@ else()
     include_directories(inc)
 
     # Create the library
-    add_library(${CMAKE_PROJECT_NAME} ${sources})
+    add_library(${MACROTHREADING_LIBRARY_NAME} ${sources})
 
     # Create the library
     find_package(Threads)
     if(CMAKE_USE_PTHREADS_INIT)
-        target_compile_definitions(${CMAKE_PROJECT_NAME}
+        target_compile_definitions(${MACROTHREADING_LIBRARY_NAME}
             PUBLIC MACROTHREADING_PTHREADS)
-        target_link_libraries (${CMAKE_PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+        target_link_libraries (${MACROTHREADING_LIBRARY_NAME} ${CMAKE_THREAD_LIBS_INIT})
     # Win32
     elseif(WIN32)
-        target_compile_definitions(${CMAKE_PROJECT_NAME}
+        target_compile_definitions(${MACROTHREADING_LIBRARY_NAME}
             PUBLIC MACROTHREADING_WINDOWS)
     else()
         message(FATAL_ERROR "No supported threading method found")
     endif()
 
-    enable_testing()
-    add_subdirectory(test)
+    # Check for top-level project
+    if(${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME})
+        enable_testing()
+        add_subdirectory(test)
+    endif()
 endif()
