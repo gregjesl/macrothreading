@@ -170,6 +170,7 @@ void macrothread_join(macrothread_handle_t input)
         input->handle,
         INFINITE
     );
+    CloseHandle(input->handle);
     #else
     #warning Join not applicable when threading is not set
     #endif
