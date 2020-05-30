@@ -5,8 +5,8 @@ void macrothread_esp_wrapper(void* arg)
 {
     macrothread_handle_t parent = (macrothread_handle_t)arg;
     parent->thread_fun(parent->arguement);
-    if(parent->detach) {
-        vEventGroupDelete(input->join_event);
+    if(parent->detached) {
+        vEventGroupDelete(parent->join_event);
         macrothread_handle_destroy(parent);
     } else {
         xEventGroupSetBits(parent->join_event, MACROTHREADING_JOIN_MASK);
@@ -152,7 +152,7 @@ void macrothread_start_thread(
         ExitProcess(1);
     }
     if(handle->detached) {
-        CloseHandle(input->handle);
+        CloseHandle(handle->handle);
     }
     #else
     function(arg);
