@@ -11,6 +11,7 @@ extern "C" {
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 // Include files
 #if defined MACROTHREADING_ESP32
@@ -24,6 +25,7 @@ typedef void (macrothread_fun_t)(void*);
 typedef struct macrothread_handle_struct {
     TaskHandle_t handle;
     macrothread_fun_t *thread_fun;
+    bool detached;
     void* arguement;
     const char *name;
     uint32_t stack_depth;
@@ -39,6 +41,7 @@ typedef uint32_t stack_depth_t;
 typedef void (macrothread_fun_t)(void*);
 typedef struct macrothread_handle_struct {
     pthread_t handle;
+    bool detached;
     size_t stack_depth;
     macrothread_fun_t *thread_fun;
     void* arguement;
@@ -50,6 +53,7 @@ typedef size_t stack_depth_t;
 typedef void (macrothread_fun_t)(void*);
 typedef struct macrothread_handle_struct {
     HANDLE handle;
+    bool detached;
     SIZE_T stack_depth;
     DWORD thread_id;
     macrothread_fun_t* thread_fun;

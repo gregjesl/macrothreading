@@ -5,7 +5,12 @@ void macrothread_esp_wrapper(void* arg)
 {
     macrothread_handle_t parent = (macrothread_handle_t)arg;
     parent->thread_fun(parent->arguement);
-    xEventGroupSetBits(parent->join_event, MACROTHREADING_JOIN_MASK);
+    if(parent->detach) {
+        vEventGroupDelete(input->join_event);
+        macrothread_handle_destroy(parent);
+    } else {
+        xEventGroupSetBits(parent->join_event, MACROTHREADING_JOIN_MASK);
+    }
 }
 #endif
 
@@ -14,6 +19,9 @@ void* macrothread_pthread_wrapper(void* arg)
 {
     macrothread_handle_t parent = (macrothread_handle_t)arg;
     parent->thread_fun(parent->arguement);
+    if(parent->detached) {
+        macrothread_handle_destroy(parent);
+    }
     return NULL;
 }
 #endif
@@ -23,6 +31,9 @@ DWORD WINAPI macrothread_windows_wrapper(LPVOID arg)
 {
     macrothread_handle_t parent = (macrothread_handle_t)arg;
     parent->thread_fun(parent->arguement);
+    if(parent->detached) {
+        macrothread_handle_destroy(parent);
+    }
     return 0;
 }
 #endif
@@ -34,6 +45,7 @@ macrothread_handle_t macrothread_handle_init()
     #if defined MACROTHREADING_ESP32
     macrothread_handle_struct_t result = {
         .handle = NULL,
+        .detached = false,
         .thread_fun = NULL,
         .arguement = NULL,
         .name = NULL,
@@ -43,6 +55,7 @@ macrothread_handle_t macrothread_handle_init()
     };
     #elif defined MACROTHREADING_PTHREADS
     macrothread_handle_struct_t result = {
+        .detached = false,
         .stack_depth = 8388608,
         .thread_fun = NULL,
         .arguement = NULL
@@ -50,6 +63,7 @@ macrothread_handle_t macrothread_handle_init()
     #elif defined MACROTHREADING_WINDOWS
     macrothread_handle_struct_t result = {
         .handle = NULL,
+        .detached = false,
         .stack_depth = 8388608,
         .thread_fun = NULL,
         .arguement = NULL
@@ -116,6 +130,9 @@ void macrothread_start_thread(
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_attr_setstacksize(&attr, handle->stack_depth);
+    if(handle->detached) {
+        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    }
     handle->thread_fun = function;
     handle->arguement = arg;
     pthread_create(&handle->handle, &attr, macrothread_pthread_wrapper, (void*)handle);
@@ -133,6 +150,9 @@ void macrothread_start_thread(
     );
     if (handle->handle == NULL) {
         ExitProcess(1);
+    }
+    if(handle->detached) {
+        CloseHandle(input->handle);
     }
     #else
     function(arg);
