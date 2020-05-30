@@ -61,6 +61,8 @@ The functions listed above can be called from any platform even if they are only
 
 Cross-platform thread delays are also supported via `macrothread_delay`. 
 
+By default, threads must be joined when completed to prevent memory leaks. Threads can also be launched in a detached state; detached threads do not require a call to `macrothread_join()` and will automaticaly destroy their handle when the thread is terminated. 
+
 ### Mutex
 Mutexes are very straight-forward:
 ```c
