@@ -20,6 +20,14 @@ if(ESP_PLATFORM)
         set(IS_ESP_COMPONENT True)
     endif()
 else()
+    if(MSVC)
+        # ignore warnings about scanf
+        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+        add_compile_options(/W4 /WX)
+    else()
+        add_compile_options(-Wall -Wextra -Werror)
+    endif()
+
     # Create the library
     add_library(${PROJECT_NAME} ${sources})
     target_include_directories(${PROJECT_NAME} PUBLIC inc)

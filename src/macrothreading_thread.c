@@ -1,4 +1,5 @@
 #include "macrothreading_thread.h"
+#include <assert.h>
 
 #ifdef MACROTHREADING_ESP32
 void macrothread_esp_wrapper(void* arg)
@@ -89,24 +90,32 @@ void macrothread_set_stack_depth(macrothread_handle_t handle, stack_depth_t stac
 
 void macrothread_set_name(macrothread_handle_t handle, const char *name)
 {
+    assert(handle != NULL);
+    assert(name != NULL);
     #if defined MACROTHREADING_ESP32
     handle->name = name;
     #endif
 }
 
+#ifdef MACROTHREADING_ESP32
 void macrothread_set_priority(macrothread_handle_t handle, unsigned int priority)
 {
     #if defined MACROTHREADING_ESP32
     handle->priority = priority;
     #endif
 }
+#else
+void macrothread_set_priority(macrothread_handle_t handle, unsigned int priority);
+#endif
 
+#ifdef MACROTHREADING_ESP32
 void macrothread_set_core(macrothread_handle_t handle, int core)
 {
-    #if defined MACROTHREADING_ESP32
     handle->core_id = core;
-    #endif
 }
+#else
+void macrothread_set_core(macrothread_handle_t, int);
+#endif
 
 void macrothread_start_thread(
     macrothread_handle_t handle, 
