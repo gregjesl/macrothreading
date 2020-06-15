@@ -80,11 +80,7 @@ macrothread_handle_t macrothread_handle_init()
 
 void macrothread_set_stack_depth(macrothread_handle_t handle, stack_depth_t stack_depth)
 {
-    #if defined MACROTHREADING_ESP32 \
-        || defined MACROTHREADING_PTHREADS \
-        || defined MACROTHREADING_WINDOWS
     handle->stack_depth = stack_depth;
-    #endif
 }
 
 #ifdef MACROTHREADING_ESP32
@@ -92,28 +88,16 @@ void macrothread_set_name(macrothread_handle_t handle, const char* name)
 {
     handle->name = name;
 }
-#else
-void macrothread_set_name(macrothread_handle_t handle, const char* name);
-#endif
 
-#ifdef MACROTHREADING_ESP32
 void macrothread_set_priority(macrothread_handle_t handle, unsigned int priority)
 {
-    #if defined MACROTHREADING_ESP32
     handle->priority = priority;
-    #endif
 }
-#else
-void macrothread_set_priority(macrothread_handle_t handle, unsigned int priority);
-#endif
 
-#ifdef MACROTHREADING_ESP32
 void macrothread_set_core(macrothread_handle_t handle, int core)
 {
     handle->core_id = core;
 }
-#else
-void macrothread_set_core(macrothread_handle_t, int);
 #endif
 
 void macrothread_start_thread(

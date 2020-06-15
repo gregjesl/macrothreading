@@ -73,9 +73,15 @@ typedef macrothread_handle_struct_t* macrothread_handle_t;
 macrothread_handle_t macrothread_handle_init();
 
 void macrothread_set_stack_depth(macrothread_handle_t handle, stack_depth_t stack_depth);
+#ifdef MACROTHREADING_ESP32
 void macrothread_set_name(macrothread_handle_t handle, const char *name);
 void macrothread_set_priority(macrothread_handle_t handle, unsigned int priority);
 void macrothread_set_core(macrothread_handle_t handle, int core);
+#else
+#define macrothread_set_name(a, b)
+#define macrothread_set_priority(a, b)
+#define macrothread_set_core(a, b)
+#endif
 
 void macrothread_start_thread(
     macrothread_handle_t handle, 
