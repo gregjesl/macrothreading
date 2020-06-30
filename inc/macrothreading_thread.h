@@ -89,6 +89,11 @@ void macrothread_start_thread(
     void* arg
 );
 
+void macrothread_start_detached_thread(
+    void (function)(void*), 
+    void* arg
+);
+
 void macrothread_delay(unsigned long int milliseconds);
 
 void macrothread_join(macrothread_handle_t handle);

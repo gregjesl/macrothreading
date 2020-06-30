@@ -151,6 +151,16 @@ void macrothread_start_thread(
     #endif
 }
 
+void macrothread_start_detached_thread(
+    void (function)(void*), 
+    void* arg
+)
+{
+    macrothread_handle_t handle = macrothread_handle_init();
+    handle->detached = true;
+    macrothread_start_thread(handle, function, arg);
+}
+
 void macrothread_delay(unsigned long int milliseconds)
 {
     #if defined MACROTHREADING_ESP32

@@ -1,4 +1,5 @@
 #include "macrothreading_thread.h"
+#include "macrothreading_condition.h"
 #include "test.h"
 
 #define INITIAL_VALUE 1
@@ -9,6 +10,12 @@ void function(void* arg)
 {
     macrothread_delay(10);
     test_value += *(int*)arg;
+}
+
+void detached_function(void *arg)
+{
+    macrothread_condition_t signal = (macrothread_condition_t)arg;
+    macrothread_condition_signal(signal);
 }
 
 #if defined ESP_PLATFORM
@@ -38,4 +45,10 @@ int main(void)
 
     // Destory the handle
     macrothread_handle_destroy(handle);
+
+    // Test a detached thread
+    macrothread_condition_t signal = macrothread_condition_init();
+    macrothread_start_detached_thread(detached_function, signal);
+    macrothread_condition_wait(signal);
+    macrothread_condition_destroy(signal);
 }
