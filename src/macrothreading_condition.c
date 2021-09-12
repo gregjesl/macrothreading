@@ -1,4 +1,5 @@
 #include "macrothreading_condition.h"
+#include <stdio.h>
 
 macrothread_condition_t macrothread_condition_init()
 {
@@ -7,33 +8,47 @@ macrothread_condition_t macrothread_condition_init()
     #elif defined MACROTHREADING_PTHREADS
     macrothread_condition_t result;
     result = (macrothread_condition_t)malloc(sizeof(macrothread_condition_struct_t));
+    if(result == NULL) return NULL;
+
     result->mutex = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
     if(result->mutex == NULL) {
-        exit(1);
+        free(result);
+        return NULL;
     }
     if(pthread_mutex_init(result->mutex, NULL) != 0) {
-        exit(1);
+        free(result->mutex);
+        free(result);
+        return NULL;
     }
     result->cond = (pthread_cond_t*)malloc(sizeof(pthread_cond_t));
     if(result->cond == NULL) {
-        exit(1);
+        free(result->mutex);
+        free(result);
+        return NULL;
     }
     if(pthread_cond_init(result->cond, NULL) != 0) {
-        exit(1);
+        free(result->mutex);
+        free(result->cond);
+        free(result);
+        return NULL;
     }
     result->signaled = false;
     return result;
     #elif defined MACROTHREADING_WINDOWS
     macrothread_condition_t result;
     result = (macrothread_condition_t)malloc(sizeof(macrothread_condition_struct_t));
+    if(result == NULL) return NULL;
     result->mutex = (CRITICAL_SECTION*)malloc(sizeof(CRITICAL_SECTION));
     if(result->mutex == NULL) {
-        ExitProcess(1);
+        free(result);
+        return NULL;
     }
     InitializeCriticalSection(result->mutex);
     result->cond = (CONDITION_VARIABLE*)malloc(sizeof(CONDITION_VARIABLE));
     if(result->cond == NULL) {
-        ExitProcess(1);
+        free(result->mutex);
+        free(result);
+        return NULL;
     }
     InitializeConditionVariable(result->cond);
     result->signaled = false;
@@ -109,10 +124,10 @@ void macrothread_condition_destroy(macrothread_condition_t cond)
     vEventGroupDelete(cond);
     #elif defined MACROTHREADING_PTHREADS
     if(pthread_cond_destroy(cond->cond) != 0) {
-        exit(1);
+        perror("pthread_cond_destroy error");
     }
     if(pthread_mutex_destroy(cond->mutex) != 0) {
-        exit(1);
+        perror("pthread_mutex_destroy error");
     }
     free(cond->cond);
     free(cond->mutex);
